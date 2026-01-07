@@ -1,33 +1,24 @@
 // =======================================================
-// Travis Digital Dash – Haltech CAN → TS Dash Serial Bridge
-// Arduino Mega 2560 + MCP2515 (16MHz) @ 500kbps
+// Travis Digital Dash
+// Haltech CAN → Arduino → TS Dash Serial Bridge
 //
-// Serial side emulates the INI requirements:
-//   queryCommand   = "Q"  -> returns "speeduino-travis"
-//   versionInfo    = "S"  -> returns VERSION string
-//   ochGetCommand  = "r"  -> returns 87-byte output block
+// Hardware:
+//   Arduino Mega 2560
+//   MCP2515 CAN module (16MHz) @ 500kbps
 //
-// INI OutputChannels (selected):
-//   rpm             U16 @ 0
-//   oilanalograw    U08 @ 3    (°C + 40)
-//   mapraw          U16 @ 4    (kPa absolute)
-//   coolantanalograw U08 @ 7   (°C + 40)
-//   oilPressure     U08 @ 10   (PSI)
-//   fuelPressure    U08 @ 11   (PSI)
-//   fuellevel       U08 @ 15   (%)
-//   vss             U16 @ 19   (kph)
-//   leftTurn        U08 @ 40   (0/1)
-//   rightTurn       U08 @ 41   (0/1)
-//   cel             U08 @ 42   (0/1)
-//   highBeam        U08 @ 43   (0/1)
-//   handbrake       U08 @ 44   (0/1)
+// Serial protocol emulates TS / Speeduino dash:
+//   Q -> signature
+//   S -> version
+//   r -> 87-byte output channel block
+//
+// Signature: speeduino-travis
 // =======================================================
 
 #include <Arduino.h>
 #include <SPI.h>
 #include <mcp_can.h>
 
-// ===================== IDENTITY (INI MATCH) =====================
+// ===================== IDENTITY =====================
 static const char SIGNATURE[] = "speeduino-travis";
 static const char VERSION[]   = "Travis Digital Dash v1.0";
 
@@ -42,220 +33,175 @@ static constexpr uint32_t BAUD_RATE = 115200;
 
 MCP_CAN CAN(CAN_CS_PIN);
 
-// =======================================================
-// HALTECH CAN MAPPING (DEFAULTS / YOU MAY NEED TO ADJUST)
-// -------------------------------------------------------
-// Haltech CAN layouts can vary by ECU config and stream.
-// These defaults are *common* patterns, but if any channel
-// shows wrong, sniff the bus and update IDs/bytes/scales.
-// =======================================================
+// ===================== HALTECH CAN IDS =====================
+// These are COMMON Haltech defaults.
+// Adjust if your ECU broadcast layout differs.
+static constexpr uint16_t ID_RPM_MAP    = 0x360;
+static constexpr uint16_t ID_TEMPS      = 0x361;
+static constexpr uint16_t ID_PRESSURES  = 0x362;
+static constexpr uint16_t ID_SPEED_FUEL = 0x363;
+static constexpr uint16_t ID_INDICATORS = 0x364;
 
-// --------- Frame IDs (11-bit) ----------
-static constexpr uint16_t ID_RPM_MAP      = 0x360; // rpm + map
-static constexpr uint16_t ID_TEMPS        = 0x361; // clt + oil temp (example)
-static constexpr uint16_t ID_PRESSURES    = 0x362; // oil psi + fuel psi (example)
-static constexpr uint16_t ID_SPEED_FUEL   = 0x363; // speed kph + fuel % (example)
-static constexpr uint16_t ID_INDICATORS   = 0x364; // turn/cel/high/handbrake (example)
-
-// --------- Byte layouts / scaling ----------
-// RPM:        U16 little-endian, units rpm
-// MAP:        U16 little-endian, units kPa absolute
-// CLT/OIL:    int16 or u16? (varies). We convert to °C then encode as U08 (°C + 40).
-// Pressures:  usually kPa or PSI; we output PSI already scaled in firmware (U08).
-// Speed:      U16 kph
-// Fuel:       U08 percent
-//
-// If your Haltech stream uses different scaling (e.g. 0.1 kPa, 0.1°C), adjust here:
-static constexpr float TEMP_SCALE = 1.0f;   // e.g. 0.1f if temp is in 0.1°C
-static constexpr float MAP_SCALE  = 1.0f;   // e.g. 0.1f if map is in 0.1 kPa
-static constexpr float RPM_SCALE  = 1.0f;   // e.g. 0.5f if half-RPM, etc.
-static constexpr float PSI_SCALE  = 1.0f;   // e.g. 0.145038 if kPa->psi, etc.
-
-// ===================== OUTPUT BLOCK =====================
-static constexpr uint8_t OCH_BLOCK_SIZE = 87;  // ini: ochBlockSize = 87
+// ===================== OUTPUT CHANNEL BLOCK =====================
+static constexpr uint8_t OCH_BLOCK_SIZE = 87;
 static uint8_t och[OCH_BLOCK_SIZE];
 
-// ===================== LIVE VALUES (decoded from CAN) =====================
-static volatile uint16_t g_rpm = 0;
-static volatile uint16_t g_map_kpa = 100;     // default ~atmosphere
-static volatile int16_t  g_clt_c = 20;
-static volatile int16_t  g_oil_c = 20;
-static volatile uint8_t  g_oil_psi = 0;
-static volatile uint8_t  g_fuel_psi = 0;
-static volatile uint16_t g_speed_kph = 0;
-static volatile uint8_t  g_fuel_pct = 0;
+// ===================== LIVE DATA =====================
+static volatile uint16_t rpm = 0;
+static volatile uint16_t map_kpa = 100;
+static volatile int16_t  clt_c = 20;
+static volatile int16_t  oil_c = 20;
+static volatile uint8_t  oil_psi = 0;
+static volatile uint8_t  fuel_psi = 0;
+static volatile uint16_t speed_kph = 0;
+static volatile uint8_t  fuel_pct = 0;
 
-static volatile uint8_t  g_leftTurn = 0;
-static volatile uint8_t  g_rightTurn = 0;
-static volatile uint8_t  g_cel = 0;
-static volatile uint8_t  g_highBeam = 0;
-static volatile uint8_t  g_handbrake = 0;
+static volatile uint8_t leftTurn = 0;
+static volatile uint8_t rightTurn = 0;
+static volatile uint8_t cel = 0;
+static volatile uint8_t highBeam = 0;
+static volatile uint8_t handbrake = 0;
 
-// Optional: basic timeout protection
+// ===================== CAN DEBUG =====================
+static uint16_t lastCanId = 0;
+static uint8_t  lastCanLen = 0;
+static uint8_t  lastCanBuf[8] = {0};
 static uint32_t lastCanRxMs = 0;
 
-// ===================== SMALL HELPERS =====================
+// ===================== SERIAL DEBUG =====================
+static bool debugEnabled = false;
+static uint32_t lastDebugPrint = 0;
+
+// ===================== HELPERS =====================
 static inline uint16_t u16le(const uint8_t *b) {
   return (uint16_t)b[0] | ((uint16_t)b[1] << 8);
 }
 static inline int16_t s16le(const uint8_t *b) {
   return (int16_t)((uint16_t)b[0] | ((uint16_t)b[1] << 8));
 }
-
-static inline uint8_t clampU8(int v) {
-  if (v < 0) return 0;
-  if (v > 255) return 255;
+static inline void writeU16LE(uint8_t *dst, uint16_t v) {
+  dst[0] = v & 0xFF;
+  dst[1] = v >> 8;
+}
+static inline uint8_t tempToIni(int16_t c) {
+  int v = c + 40;
+  if (v < 0) v = 0;
+  if (v > 255) v = 255;
   return (uint8_t)v;
 }
 
-static inline uint8_t tempC_to_iniRaw(int16_t tempC) {
-  // INI expects U08 = (°C + 40)
-  return clampU8((int)tempC + 40);
-}
-
-static void writeU16LE(uint8_t *dst, uint16_t v) {
-  dst[0] = (uint8_t)(v & 0xFF);
-  dst[1] = (uint8_t)(v >> 8);
-}
-
-// ===================== CAN RECEIVE =====================
-static void handleCanFrame(uint16_t id, const uint8_t *buf, uint8_t len) {
-  (void)len;
+// ===================== CAN HANDLER =====================
+static void handleCan(uint16_t id, const uint8_t *buf, uint8_t len) {
+  lastCanId = id;
+  lastCanLen = len;
+  memcpy(lastCanBuf, buf, len);
   lastCanRxMs = millis();
 
   switch (id) {
-    case ID_RPM_MAP: {
-      // [0..1]=RPM, [2..3]=MAP (kPa abs)
-      uint16_t rpmRaw = u16le(&buf[0]);
-      uint16_t mapRaw = u16le(&buf[2]);
+    case ID_RPM_MAP:
+      rpm = u16le(&buf[0]);
+      map_kpa = u16le(&buf[2]);
+      break;
 
-      uint32_t rpm = (uint32_t)(rpmRaw * RPM_SCALE);
-      uint32_t map = (uint32_t)(mapRaw * MAP_SCALE);
+    case ID_TEMPS:
+      clt_c = s16le(&buf[0]);
+      oil_c = s16le(&buf[2]);
+      break;
 
-      if (rpm > 30000) rpm = 30000;
-      if (map > 4000)  map = 4000;
+    case ID_PRESSURES:
+      oil_psi  = buf[0];
+      fuel_psi = buf[1];
+      break;
 
-      g_rpm = (uint16_t)rpm;
-      g_map_kpa = (uint16_t)map;
-    } break;
-
-    case ID_TEMPS: {
-      // Example: [0..1]=CLT, [2..3]=OilTemp (in °C * TEMP_SCALE)
-      int16_t cltRaw = s16le(&buf[0]);
-      int16_t oilRaw = s16le(&buf[2]);
-
-      int16_t cltC = (int16_t)(cltRaw * TEMP_SCALE);
-      int16_t oilC = (int16_t)(oilRaw * TEMP_SCALE);
-
-      // sanity
-      if (cltC < -40) cltC = -40;
-      if (cltC > 215) cltC = 215;
-      if (oilC < -40) oilC = -40;
-      if (oilC > 215) oilC = 215;
-
-      g_clt_c = cltC;
-      g_oil_c = oilC;
-    } break;
-
-    case ID_PRESSURES: {
-      // Example: [0]=oil psi, [1]=fuel psi (already PSI)
-      // If yours is kPa, change PSI_SCALE and conversion.
-      uint16_t oilRaw  = buf[0];
-      uint16_t fuelRaw = buf[1];
-
-      uint16_t oilPsi  = (uint16_t)(oilRaw * PSI_SCALE);
-      uint16_t fuelPsi = (uint16_t)(fuelRaw * PSI_SCALE);
-
-      if (oilPsi  > 255) oilPsi  = 255;
-      if (fuelPsi > 255) fuelPsi = 255;
-
-      g_oil_psi  = (uint8_t)oilPsi;
-      g_fuel_psi = (uint8_t)fuelPsi;
-    } break;
-
-    case ID_SPEED_FUEL: {
-      // Example: [0..1]=speed kph, [2]=fuel %
-      g_speed_kph = u16le(&buf[0]);
-      g_fuel_pct  = buf[2];
-      if (g_fuel_pct > 100) g_fuel_pct = 100;
-    } break;
+    case ID_SPEED_FUEL:
+      speed_kph = u16le(&buf[0]);
+      fuel_pct  = buf[2] > 100 ? 100 : buf[2];
+      break;
 
     case ID_INDICATORS: {
-      // Example: packed bits in buf[0]
-      // bit0=left, bit1=right, bit2=cel, bit3=high, bit4=handbrake
-      uint8_t bits = buf[0];
-      g_leftTurn  = (bits & (1 << 0)) ? 1 : 0;
-      g_rightTurn = (bits & (1 << 1)) ? 1 : 0;
-      g_cel       = (bits & (1 << 2)) ? 1 : 0;
-      g_highBeam  = (bits & (1 << 3)) ? 1 : 0;
-      g_handbrake = (bits & (1 << 4)) ? 1 : 0;
+      uint8_t b = buf[0];
+      leftTurn  = (b & 0x01) ? 1 : 0;
+      rightTurn = (b & 0x02) ? 1 : 0;
+      cel       = (b & 0x04) ? 1 : 0;
+      highBeam  = (b & 0x08) ? 1 : 0;
+      handbrake = (b & 0x10) ? 1 : 0;
     } break;
-
-    default:
-      break;
   }
 }
 
-// ===================== BUILD THE 87-BYTE OCH BLOCK =====================
-static void buildOchBlock() {
-  // Clear everything (anything not defined in your INI stays 0)
+// ===================== BUILD OCH BLOCK =====================
+static void buildOch() {
   memset(och, 0, sizeof(och));
 
-  // Match INI offsets exactly :contentReference[oaicite:4]{index=4}
-  // rpm: U16 @ 0
-  writeU16LE(&och[0], g_rpm);
+  writeU16LE(&och[0], rpm);          // rpm
+  och[3]  = tempToIni(oil_c);        // oil temp raw
+  writeU16LE(&och[4], map_kpa);      // map
+  och[7]  = tempToIni(clt_c);        // coolant temp raw
+  och[10] = oil_psi;                 // oil pressure
+  och[11] = fuel_psi;                // fuel pressure
+  och[15] = fuel_pct;                // fuel level
+  writeU16LE(&och[19], speed_kph);   // vss
 
-  // oilanalograw: U08 @ 3  (°C + 40)
-  och[3] = tempC_to_iniRaw(g_oil_c);
-
-  // mapraw: U16 @ 4 (kPa abs)
-  writeU16LE(&och[4], g_map_kpa);
-
-  // coolantanalograw: U08 @ 7 (°C + 40)
-  och[7] = tempC_to_iniRaw(g_clt_c);
-
-  // oilPressure: U08 @ 10 (PSI)
-  och[10] = g_oil_psi;
-
-  // fuelPressure: U08 @ 11 (PSI)
-  och[11] = g_fuel_psi;
-
-  // fuellevel: U08 @ 15 (%)
-  och[15] = g_fuel_pct;
-
-  // vss: U16 @ 19 (kph)
-  writeU16LE(&och[19], g_speed_kph);
-
-  // indicators: U08 @ 40..44
-  och[40] = g_leftTurn;
-  och[41] = g_rightTurn;
-  och[42] = g_cel;
-  och[43] = g_highBeam;
-  och[44] = g_handbrake;
+  och[40] = leftTurn;
+  och[41] = rightTurn;
+  och[42] = cel;
+  och[43] = highBeam;
+  och[44] = handbrake;
 }
 
-// ===================== TS SERIAL COMMAND HANDLING =====================
-// TS will send:
-//  'Q' -> expects signature string :contentReference[oaicite:5]{index=5}
-//  'S' -> expects version string :contentReference[oaicite:6]{index=6}
-//  'r' -> expects ochBlockSize bytes :contentReference[oaicite:7]{index=7}
-//
-// Important: Do NOT print debug text while TS is connected.
-static void handleSerialByte(uint8_t c) {
-  if (c == 'Q') {
-    Serial.print(SIGNATURE);
-    return;
-  }
-  if (c == 'S') {
-    Serial.print(VERSION);
-    return;
-  }
+// ===================== SERIAL COMMAND HANDLER =====================
+static void handleSerial(uint8_t c) {
+
+  // ---- TS REQUIRED ----
+  if (c == 'Q') { Serial.print(SIGNATURE); return; }
+  if (c == 'S') { Serial.print(VERSION);   return; }
   if (c == 'r') {
-    buildOchBlock();
+    buildOch();
     Serial.write(och, OCH_BLOCK_SIZE);
     return;
   }
-  // ignore anything else (keeps TS happy)
+
+  // ---- DEBUG COMMANDS ----
+  if (c == 'd') {
+    debugEnabled = !debugEnabled;
+    Serial.println(debugEnabled ? "DEBUG ON" : "DEBUG OFF");
+    return;
+  }
+
+  if (c == 'D') {
+    Serial.println(F("---- HALTECH CAN DEBUG ----"));
+    Serial.print(F("RPM: ")); Serial.println(rpm);
+    Serial.print(F("MAP kPa: ")); Serial.println(map_kpa);
+    Serial.print(F("CLT C: ")); Serial.println(clt_c);
+    Serial.print(F("Oil C: ")); Serial.println(oil_c);
+    Serial.print(F("Oil PSI: ")); Serial.println(oil_psi);
+    Serial.print(F("Fuel PSI: ")); Serial.println(fuel_psi);
+    Serial.print(F("Speed kph: ")); Serial.println(speed_kph);
+    Serial.print(F("Fuel %: ")); Serial.println(fuel_pct);
+    Serial.print(F("LT RT CEL HB HBK: "));
+    Serial.print(leftTurn); Serial.print(" ");
+    Serial.print(rightTurn); Serial.print(" ");
+    Serial.print(cel); Serial.print(" ");
+    Serial.print(highBeam); Serial.print(" ");
+    Serial.println(handbrake);
+    Serial.println(F("---------------------------"));
+    return;
+  }
+
+  if (c == 'C') {
+    Serial.print(F("CAN ID 0x"));
+    Serial.print(lastCanId, HEX);
+    Serial.print(F(" LEN "));
+    Serial.println(lastCanLen);
+    Serial.print(F("DATA "));
+    for (uint8_t i = 0; i < lastCanLen; i++) {
+      if (lastCanBuf[i] < 16) Serial.print('0');
+      Serial.print(lastCanBuf[i], HEX);
+      Serial.print(' ');
+    }
+    Serial.println();
+    return;
+  }
 }
 
 // ===================== SETUP =====================
@@ -265,39 +211,47 @@ void setup() {
   pinMode(CAN_INT_PIN, INPUT);
 
   if (CAN.begin(MCP_ANY, CAN_SPEED, CAN_CLOCK) != CAN_OK) {
-    // No Serial prints here if you want TS to connect cleanly later.
-    // If you need debug, temporarily uncomment this:
-    // Serial.println("CAN INIT FAILED");
     while (1) {;}
   }
-
   CAN.setMode(MCP_NORMAL);
   lastCanRxMs = millis();
 }
 
 // ===================== LOOP =====================
 void loop() {
-  // --- CAN service ---
+
+  // ---- CAN RECEIVE ----
   if (!digitalRead(CAN_INT_PIN)) {
-    long unsigned int rxId32;
-    unsigned char len = 0;
+    long unsigned int rxId;
+    unsigned char len;
     unsigned char buf[8];
 
-    if (CAN.readMsgBuf(&rxId32, &len, buf) == CAN_OK) {
-      uint16_t id = (uint16_t)(rxId32 & 0x7FF); // 11-bit
-      handleCanFrame(id, buf, len);
+    if (CAN.readMsgBuf(&rxId, &len, buf) == CAN_OK) {
+      handleCan(rxId & 0x7FF, buf, len);
     }
   }
 
-  // --- Optional: CAN timeout fallback (prevent stale numbers) ---
+  // ---- CAN TIMEOUT SAFETY ----
   if (millis() - lastCanRxMs > 1000) {
-    g_rpm = 0;
-    g_speed_kph = 0;
-    // keep temps/map last-known; you can zero them too if you prefer
+    rpm = 0;
+    speed_kph = 0;
   }
 
-  // --- Serial service ---
+  // ---- SERIAL ----
   while (Serial.available()) {
-    handleSerialByte((uint8_t)Serial.read());
+    handleSerial((uint8_t)Serial.read());
+  }
+
+  // ---- OPTIONAL LIVE DEBUG (USE ONLY WITHOUT TS DASH) ----
+  if (debugEnabled && millis() - lastDebugPrint > 500) {
+    lastDebugPrint = millis();
+    Serial.print(F("RPM "));
+    Serial.print(rpm);
+    Serial.print(F(" MAP "));
+    Serial.print(map_kpa);
+    Serial.print(F(" CLT "));
+    Serial.print(clt_c);
+    Serial.print(F(" OilPSI "));
+    Serial.println(oil_psi);
   }
 }
