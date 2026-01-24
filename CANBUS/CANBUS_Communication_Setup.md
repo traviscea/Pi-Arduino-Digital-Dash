@@ -16,7 +16,7 @@ The specific INO file for HALTECHs or other standalones which is in the project 
 In the IDE, the appropriate library needs to be installed so that the ino file(referenced above) has access to it.
 Do this by:
 - Going to the top and clikcing: ```Sketch → Include Library → Manage Libraries```
-- Search for ```MCP_CAN_lib```
+- Search for ```MCP_CAN```
 - This the libary the CANBUS ino's use ```#include <mcp_can.h>```
 
 
