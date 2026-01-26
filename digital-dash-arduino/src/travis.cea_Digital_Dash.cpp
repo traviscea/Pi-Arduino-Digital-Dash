@@ -1,3 +1,4 @@
+#ifndef CAN_ENABLED
 // =======================================================
 // Travis Digital Dash – TunerStudio Interface
 // FINAL PRODUCTION BUILD  +  BATT VOLTAGE
@@ -248,6 +249,7 @@ static inline uint8_t clampU8(int v){
   return v;
 }
 
+float readAdcFiltered(int pin, float &ema, uint8_t samples, uint8_t trim, float alpha);
 uint16_t readBatteryVoltage_x10(float &ema) {
   float adc = readAdcFiltered(BATT_VOLTAGE_PIN, ema, 8, 1, EMA_ALPHA_SLOW);
   float vAdc = adc * (VREF / ADC_MAX);
@@ -895,3 +897,4 @@ void loop(){
     else if (c == 'd') { readU16LE(); uint32_t crc=0; Serial.write((uint8_t*)&crc,4); }
   }
 }
+#endif

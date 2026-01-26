@@ -1,3 +1,4 @@
+#ifdef CAN_ENABLED
 // =======================================================
 // Travis Digital Dash – Haltech CAN → TS Dash Serial Bridge
 // Arduino Mega 2560 + MCP2515 (16MHz) @ 500kbps 
@@ -302,3 +303,4 @@ void loop() {
     handleSerialByte((uint8_t)Serial.read());
   }
 }
+#endif
