@@ -68,7 +68,7 @@ Mode	Behavior
 <br>
 - Going to the top and clikcing: ```Sketch → Include Library → Manage Libraries```
 <br>
-- Search for ```TinyGPS```.
+- Search for ```TinyGPSPlus```.
 <br>
 - This the libary the CANBUS ino's use ```#include <TinyGPS++.h>```
 <br>
