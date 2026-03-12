@@ -36,7 +36,7 @@ For free dashboard downloads go to https://tunerstudiodashboards.com/ (you will 
 After the dashboard is setup how you like, the fun starts.  I utilized a arduino to communicate with the Pi and TS Dash to pass sensor data.  The ```.ino``` file in this repo contains all the code to add the Arduino Mega.  I will try to keep this file updated with suggestions from users or with additions I find useful.
 <br>
 <br>
----------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------<br>
 ***I have added a gps speedo/odometer .ino file!  All the other sensor data is the same, just speed and mileage is coming from a m10 gps module.***
 <br>
 You can find the gps module here: https://a.co/d/0e3IsbNv 
@@ -73,10 +73,9 @@ Mode	Behavior
 - This the libary the CANBUS ino's use ```#include <TinyGPS++.h>```
 <br>
 <br>
+---------------------------------------------------------------------------------------------------<br>
 <br>
 <br>
-<br>
----------------------------------------------------------------------------------------------------
 To upload the ```.ino``` to the arduino you will need the ArduinoIDE(https://www.arduino.cc/en/software/) and to download it to a separate machine(not needed on the Pi)
 <br>
 <br>
