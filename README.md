@@ -66,7 +66,7 @@ Mode	Behavior
 
 <br>
 <br>
-- Going to the top and clikcing: ```Sketch → Include Library → Manage Libraries```
+- Going to the top and clicking: ```Sketch → Include Library → Manage Libraries```
 <br>
 - Search for ```TinyGPSPlus```.
 <br>
