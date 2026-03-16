@@ -46,7 +46,7 @@ and it is wired like so:
 <br>
 GPS --- Arduino
 <br>
-X	--> RX1 (Pin 19)
+TX	--> RX1 (Pin 19)
 <br>
 VCC	--> 5v
 <br>
@@ -66,7 +66,7 @@ Mode	Behavior
 
 <br>
 <br>
-- Going to the top and clikcing: ```Sketch → Include Library → Manage Libraries```
+- Going to the top and clicking: ```Sketch → Include Library → Manage Libraries```
 <br>
 - Search for ```TinyGPSPlus```.
 <br>
