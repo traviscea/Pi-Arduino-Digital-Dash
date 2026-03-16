@@ -382,26 +382,47 @@ void loop(){
     decodeCAN(rxId,rxBuf);
   }
 
-  while(Serial.available()){
+  while (Serial.available()) {
+    char c = Serial.read();
 
-    char c=Serial.read();
-
-    if(c=='Q')
+    if(c=='Q') {
       Serial.write("speeduino-travis",32);
+    }
 
-    else if(c=='S')
+    else if(c=='S') {
       Serial.write("CAN Dash v1.0",32);
+    }
 
-    else if(c=='F'){
-      uint8_t f[3]={0,0,0};
+    else if (c == 'F') {
+      uint8_t f[3] = {0,0,0};
       Serial.write(f,3);
     }
 
-    else if(c=='r'){
+    else if (c == 'r') {
       readU16LE();
       readU16LE();
-      buildOch();
-      Serial.write(och,OCH_BLOCK_SIZE);
+      buildOch();     // <-- your CAN OCH builder
+      Serial.write(och, OCH_BLOCK_SIZE);
+    }
+
+    else if (c == 'p') {
+      readU16LE();
+      readU16LE();
+      uint16_t len = readU16LE();
+
+      static uint8_t z[288];
+      memset(z, 0, min(len,(uint16_t)288));
+      Serial.write(z, min(len,(uint16_t)288));
+    }
+
+    else if (c == 'b') {
+      readU16LE();
+    }
+
+    else if (c == 'd') {
+      readU16LE();
+      uint32_t crc = 0;
+      Serial.write((uint8_t*)&crc,4);
     }
   }
 }
