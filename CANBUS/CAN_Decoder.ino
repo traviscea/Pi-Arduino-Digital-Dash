@@ -401,7 +401,7 @@ void loop(){
     else if (c == 'r') {
       readU16LE();
       readU16LE();
-      buildOch();     // <-- your CAN OCH builder
+      buildOch();
       Serial.write(och, OCH_BLOCK_SIZE);
     }
 
