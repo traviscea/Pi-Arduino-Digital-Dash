@@ -21,6 +21,10 @@
 #define MAX_SIGNALS 128
 #define MAX_CAN_IDS 32
 
+static const char SIGNATURE[32] = "speeduino-travis";
+static const char VERSION[32]   = "CAN Dash v1.0";
+
+
 MCP_CAN CAN(CAN_CS_PIN);
 
 /* ============================
@@ -209,19 +213,19 @@ void selectProtocol(uint8_t p){
     case 0:
       protocol=haltechProtocol;
       signalCount=sizeof(haltechProtocol)/sizeof(CANSignal);
-      Serial.println("Protocol: Haltech");
+      //Serial.println("Protocol: Haltech");
       break;
 
     case 1:
       protocol=maxxecuProtocol;
       signalCount=sizeof(maxxecuProtocol)/sizeof(CANSignal);
-      Serial.println("Protocol: MaxxECU");
+      //Serial.println("Protocol: MaxxECU");
       break;
 
     case 2:
       protocol=emuProtocol;
       signalCount=sizeof(emuProtocol)/sizeof(CANSignal);
-      Serial.println("Protocol: EMU Black");
+      //Serial.println("Protocol: EMU Black");
       break;
   }
 
@@ -239,7 +243,7 @@ void autoDetectProtocol(){
   bool seen520=false;
   bool seen600=false;
 
-  Serial.println("Detecting ECU...");
+  //Serial.println("Detecting ECU...");
 
   uint32_t start=millis();
 
@@ -259,7 +263,7 @@ void autoDetectProtocol(){
   else if(seen520) selectProtocol(1);
   else if(seen600) selectProtocol(2);
   else{
-    Serial.println("Unknown ECU → Haltech");
+    //Serial.println("Unknown ECU → Haltech");
     selectProtocol(0);
   }
 }
@@ -360,7 +364,7 @@ void setup(){
   Serial.begin(BAUD_RATE);
 
   if(CAN.begin(MCP_ANY,CAN_1000KBPS,MCP_8MHZ)!=CAN_OK){
-    Serial.println("CAN FAIL");
+    //Serial.println("CAN FAIL");
     while(1);
   }
 
@@ -368,7 +372,7 @@ void setup(){
 
   autoDetectProtocol();
 
-  Serial.println("CAN Decoder Ready");
+  //Serial.println("CAN Decoder Ready");
 }
 
 /* ============================
@@ -386,11 +390,11 @@ void loop(){
     char c = Serial.read();
 
     if(c=='Q') {
-      Serial.write("speeduino-travis",32);
+      Serial.write((const uint8_t*)SIGNATURE,32);
     }
 
     else if(c=='S') {
-      Serial.write("CAN Dash v1.0",32);
+      Serial.write((const uint8_t*)VERSION,32);
     }
 
     else if (c == 'F') {
