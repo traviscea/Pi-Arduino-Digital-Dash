@@ -101,33 +101,33 @@ After that you just need to wire the sensors to the arduino.  My youtube video g
 <br>
 ## **Items Needed:**
 <br>
-Raspberry Pi 5 - 75$ https://a.co/d/6ZqmxDW
+Raspberry Pi 5 - 75$ https://amzn.to/4w82O1x
 
-7in touchscreen(Or use different brand or size(10in, etc) - 41$ https://a.co/d/9zJ6kil
+7in touchscreen(Or use different brand or size(10in, etc) - 41$ https://amzn.to/48lf5Fq
 
-Arduino Mega 2560 - 23$ https://a.co/d/3NjqWy6
+Arduino Mega 2560 - 23$ https://amzn.to/3QtXipC
 
-12v to 5v 5A converter(2 pack) -15$ https://a.co/d/bSsF607
+12v to 5v 5A converter(2 pack) -15$ https://amzn.to/4963jPq
 
-Jumper Wires/pins - 15$ https://a.co/d/avUqsKu
+Jumper Wires/pins - 15$ https://amzn.to/4d0w0jf
 
-Resistor Kit - 13$ https://a.co/d/8vXxGQ8
+Resistor Kit - 13$ https://amzn.to/4t53yBO
 
-Transistor Kit - 9$ https://a.co/d/8RgLv33
+Transistor Kit - 9$ https://amzn.to/41QFyHp
 
-Micro SD card - 8$(Use SSD or NVMe for quicker boot) https://a.co/d/foGQRCk
+Micro SD card - 8$(Use SSD or NVMe for quicker boot) https://amzn.to/4cK0eG2
 
-Printer cable(cut red wire on for data transfer only) - 7$ https://a.co/d/ezsc7eX
+Printer cable(cut red wire on for data transfer only) - 7$ https://amzn.to/4cvHmf1
 
-Power Distribution Board - 7$ https://a.co/d/5vZJxqO
+Power Distribution Board - 7$ https://amzn.to/4cHWswK
 <br>
 ### **Optional but makes it easier**
 
-GPIO Terminal Block Breakout Board -29$ https://a.co/d/5wfxBdf
+GPIO Terminal Block Breakout Board -29$ https://amzn.to/4cKgAhP
 
-Pi 5v wall plug(to bench test) - 12$ https://a.co/d/3odHP2B
+Pi 5v wall plug(to bench test) - 12$ https://amzn.to/4sTHk5u
 
-22 awg wire - 8$ https://a.co/d/eDb6Mbe
+22 awg wire - 8$ https://amzn.to/4sUK96m
 
 
 
