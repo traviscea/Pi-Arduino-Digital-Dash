@@ -94,11 +94,13 @@ Wait for it to say "Done uploading" at the bottom and then you can unplug the ar
 After that you just need to wire the sensors to the arduino.  My youtube video goes over that in depth, but basically you need to utilize sensors that already exist on your vehicle or purchase new ones solely for this purpose.
 <br>
 <br>
+  
 ## **3d Print files**
 3d print file for 02-07 Subaru wrx/sti cluster ----  https://makerworld.com/en/models/2182382-02-07-subaru-wrx-sti-gauge-cluster-for-7in-screen
 <br>
 <br>
 <br>
+  
 ## **Items Needed:**
 <br>
 Raspberry Pi 5 - 75$ https://amzn.to/4w82O1x
@@ -121,6 +123,7 @@ Printer cable(cut red wire on for data transfer only) - 7$ https://amzn.to/4cv
 
 Power Distribution Board - 7$ https://amzn.to/4cHWswK
 <br>
+
 ### **Optional but makes it easier**
 
 GPIO Terminal Block Breakout Board -29$ https://amzn.to/4cKgAhP
