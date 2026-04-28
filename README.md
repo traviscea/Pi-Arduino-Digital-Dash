@@ -9,7 +9,7 @@ A DIY digital dash I made using a Raspberry Pi 5, Arduino Mega 2560, and a touch
 #### For CANBUS ####
 Please read the ```CANBUS_Communication_Setup.md```
 <br>
-I have added a Haltech INO to read directly from haltech's CANBUS.  This is just a WIP/draft and the arduino will need to be added as a CAN node.  That can be done with this 10$ part(https://a.co/d/0xAnIYF)
+I have added a Haltech INO to read directly from haltech's CANBUS.  This is just a WIP/draft and the arduino will need to be added as a CAN node.  That can be done with this [10$ part](https://www.amazon.com/dp/B01D0WSEWU?_encoding=UTF8&social_share=cm_sw_r_cp_ud_dp_AGTZYBY4H0VM5RWMRAPV_2&th=1&linkCode=ll2&tag=traviscea05-20&linkId=021101977929d6ecaa7c7b91e73d4613&language=en_US&ref_=as_li_ss_tl)
 
 Future standalones/canbus configs will be added as I have time.
   
