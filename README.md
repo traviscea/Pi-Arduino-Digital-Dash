@@ -104,6 +104,11 @@ After that you just need to wire the sensors to the arduino.  My youtube video g
 ## **Items Needed:**
 <br>
 
+Disclaimer: Some of the links below are affiliate links, which means I may earn a commission at no extra cost to you.
+
+As an Amazon Associate I earn from qualifying purchases.
+
+
 Raspberry Pi 5 - 75$ [Amazon link](https://www.amazon.com/dp/B0CK3L9WD3?social_share=cm_sw_r_cp_ud_dp_1DD5B1RH6S7VT9CAR58Q&linkCode=ll2&tag=traviscea05-20&linkId=cc6cb0955534345e90336c41fa2e8cda&language=en_US&ref_=as_li_ss_tl)
 
 7in touchscreen(Or use different brand or size(10in, etc) - 41$ [Amazon link](https://www.amazon.com/dp/B09XKC53NH?social_share=cm_sw_r_cp_ud_dp_2H0RCT2M49G77G8262WM&th=1&linkCode=ll2&tag=traviscea05-20&linkId=0e5cf05bad60380c72b185e2ed2eb054&language=en_US&ref_=as_li_ss_tl)
