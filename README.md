@@ -103,35 +103,37 @@ After that you just need to wire the sensors to the arduino.  My youtube video g
   
 ## **Items Needed:**
 <br>
-Raspberry Pi 5 - 75$ https://amzn.to/4w82O1x
 
-7in touchscreen(Or use different brand or size(10in, etc) - 41$ https://amzn.to/48lf5Fq
+Raspberry Pi 5 - 75$ [Amazon link](https://www.amazon.com/dp/B0CK3L9WD3?social_share=cm_sw_r_cp_ud_dp_1DD5B1RH6S7VT9CAR58Q&linkCode=ll2&tag=traviscea05-20&linkId=cc6cb0955534345e90336c41fa2e8cda&language=en_US&ref_=as_li_ss_tl)
 
-Arduino Mega 2560 - 23$ https://amzn.to/3QtXipC
+7in touchscreen(Or use different brand or size(10in, etc) - 41$ [Amazon link](https://www.amazon.com/dp/B09XKC53NH?social_share=cm_sw_r_cp_ud_dp_2H0RCT2M49G77G8262WM&th=1&linkCode=ll2&tag=traviscea05-20&linkId=0e5cf05bad60380c72b185e2ed2eb054&language=en_US&ref_=as_li_ss_tl)
 
-12v to 5v 5A converter(2 pack) -15$ https://amzn.to/4963jPq
+Arduino Mega 2560 - 23$ [Amazon link](https://www.amazon.com/dp/B01H4ZLZLQ?_encoding=UTF8&social_share=cm_sw_r_cp_ud_dp_H5PVXBFQVMWZ74VF5H8X&th=1&linkCode=ll2&tag=traviscea05-20&linkId=068af092f5ed31a900f140e21d30bf38&language=en_US&ref_=as_li_ss_tl)
 
-Jumper Wires/pins - 15$ https://amzn.to/4d0w0jf
+12v to 5v 5A converter(2 pack) -15$ [Amazon link](https://www.amazon.com/dp/B0FD735LFG?_encoding=UTF8&social_share=cm_sw_r_cp_ud_dp_BKV0VXHK97E7EW68ZXR2&th=1&linkCode=ll2&tag=traviscea05-20&linkId=24cc0ba28d05f93e766c38906a40cadf&language=en_US&ref_=as_li_ss_tl)
 
-Resistor Kit - 13$ https://amzn.to/4t53yBO
+Jumper Wires/pins - 15$ [Amazon link](https://www.amazon.com/dp/B01EV70C78?social_share=cm_sw_r_cp_ud_dp_9RW2PS22RH9QZZ6XJS54&linkCode=ll2&tag=traviscea05-20&linkId=f17e8f965fc5da432afe242fd58ea229&language=en_US&ref_=as_li_ss_tl)
 
-Transistor Kit - 9$ https://amzn.to/41QFyHp
+Resistor Kit - 13$ [Amazon link](https://www.amazon.com/dp/B07P3MFG5D?social_share=cm_sw_r_cp_ud_dp_AR3AT7NKF7YTJ80EKTGY&linkCode=ll2&tag=traviscea05-20&linkId=f5d1872c0fa2ab0a6985f64593e99e42&language=en_US&ref_=as_li_ss_tl)
 
-Micro SD card - 8$(Use SSD or NVMe for quicker boot) https://amzn.to/4cK0eG2
+Transistor Kit - 9$ [Amazon link](https://www.amazon.com/dp/B07T61SY9Y?social_share=cm_sw_r_cp_ud_dp_KZQ6QB7G823G09D3W2A2&linkCode=ll2&tag=traviscea05-20&linkId=cd18b3b204634c84de0f02acdf4b187f&language=en_US&ref_=as_li_ss_tl)
 
-Printer cable(cut red wire on for data transfer only) - 7$ https://amzn.to/4cvHmf1
+Micro SD card - 8$(Use SSD or NVMe for quicker boot) [Amazon links](https://www.amazon.com/dp/B07R8GVGN9?social_share=cm_sw_r_cp_ud_dp_2X8Y5AD031V7FXTXV9S7&th=1&linkCode=ll2&tag=traviscea05-20&linkId=c00dc833592126202c7006f9aff2c5ac&language=en_US&ref_=as_li_ss_tl)
 
-Power Distribution Board - 7$ https://amzn.to/4cHWswK
+Printer cable(cut red wire on for data transfer only) - 7$ [Amazon link](https://www.amazon.com/dp/B00NH11KIK?social_share=cm_sw_r_cp_ud_dp_DQVA80VTP8BKRPJ0FV8R&th=1&linkCode=ll2&tag=traviscea05-20&linkId=47be211ae2fb288962e057958b334546&language=en_US&ref_=as_li_ss_tl)
+
+Power Distribution Board - 7$ [Amazon link](https://www.amazon.com/dp/B07DW2C4ZB?social_share=cm_sw_r_cp_ud_dp_60D75AV4HJK6VE8ER2DJ&th=1&linkCode=ll2&tag=traviscea05-20&linkId=b2d9fb080aafcb5abc51864d3c2cb777&language=en_US&ref_=as_li_ss_tl)
 <br>
 
 ### **Optional but makes it easier**
 
-GPIO Terminal Block Breakout Board -29$ https://amzn.to/4cKgAhP
+GPIO Terminal Block Breakout Board -29$ [Amazon link](https://www.amazon.com/dp/B08XVMBR6P?social_share=cm_sw_r_cp_ud_dp_N4XBDZ5H1Z55E4W18QH8_1&linkCode=ll2&tag=traviscea05-20&linkId=46b7f5d496ef40f445e4604e2ebfe857&language=en_US&ref_=as_li_ss_tl)
 
-Pi 5v wall plug(to bench test) - 12$ https://amzn.to/4sTHk5u
+Pi 5v wall plug(to bench test) - 12$ [Amazon link](https://www.amazon.com/dp/B0CQLNP9DZ?social_share=cm_sw_r_cp_ud_dp_5660V558FVQBK9CKQKKT_1&linkCode=ll2&tag=traviscea05-20&linkId=b41b6724b453714e56e8fb84e31edabc&language=en_US&ref_=as_li_ss_tl)
 
-22 awg wire - 8$ https://amzn.to/4sUK96m
+22 awg wire - 8$ [Amazon link](https://www.amazon.com/dp/B08F7BMVJW?social_share=cm_sw_r_cp_ud_dp_PR2Z3ZMNATQXQVNBAFGD&th=1&linkCode=ll2&tag=traviscea05-20&linkId=3fae784fd5aca037f971f8dcff5ffbad&language=en_US&ref_=as_li_ss_tl)
 
 
-
+<br>
+<br>
 Copyright (c) 2025 Travis Way
