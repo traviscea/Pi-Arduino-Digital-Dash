@@ -39,7 +39,7 @@ After the dashboard is setup how you like, the fun starts.  I utilized a arduino
 ---------------------------------------------------------------------------------------------------<br>
 ***I have added a gps speedo/odometer .ino file!  All the other sensor data is the same, just speed and mileage is coming from a m10 gps module.***
 <br>
-You can find the gps module here: https://a.co/d/0e3IsbNv 
+You can find the gps module [here](https://www.amazon.com/dp/B0C4XKZHNP?social_share=cm_sw_r_cp_ud_dp_R9XY52CS9CJP678M30AX&th=1&linkCode=ll2&tag=traviscea05-20&linkId=d3a60bf963267196e73d14a47665376e&language=en_US&ref_=as_li_ss_tl)
 <br>
 and it is wired like so:
 <br>
