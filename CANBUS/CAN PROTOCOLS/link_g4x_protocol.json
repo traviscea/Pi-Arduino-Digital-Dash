@@ -1,0 +1,31 @@
+{
+  "protocol":"LINK_G4X",
+  "signals":[
+
+    {"name":"RPM","id":"0x3E8","start":0,"length":2,"scale":1,"offset":0,"endian":"big"},
+    {"name":"MAP","id":"0x3E8","start":2,"length":2,"scale":1,"offset":-100,"endian":"big"},
+    {"name":"CLT","id":"0x3E8","start":4,"length":1,"scale":1,"offset":-50,"endian":"big"},
+    {"name":"IAT","id":"0x3E8","start":5,"length":1,"scale":1,"offset":-50,"endian":"big"},
+    {"name":"BATT","id":"0x3E8","start":6,"length":1,"scale":0.1,"offset":0,"endian":"big"},
+    {"name":"OILT","id":"0x3E8","start":7,"length":1,"scale":1,"offset":-50,"endian":"big"},
+
+    {"name":"TPS","id":"0x3E9","start":0,"length":2,"scale":0.1,"offset":0,"endian":"big"},
+    {"name":"IGNANG","id":"0x3E9","start":2,"length":2,"scale":0.1,"offset":-100,"endian":"big"},
+    {"name":"VSPD","id":"0x3E9","start":4,"length":1,"scale":1,"offset":0,"endian":"big"},
+    {"name":"OILP","id":"0x3E9","start":5,"length":1,"scale":0.1,"offset":0,"endian":"big"},
+    {"name":"FUELP","id":"0x3E9","start":6,"length":1,"scale":0.1,"offset":0,"endian":"big"},
+    {"name":"ECUTEMP","id":"0x3E9","start":7,"length":1,"scale":1,"offset":-50,"endian":"big"},
+
+    {"name":"LAMBDA1","id":"0x3EA","start":0,"length":2,"scale":0.001,"offset":0,"endian":"big"},
+    {"name":"LAMBDA2","id":"0x3EA","start":2,"length":2,"scale":0.001,"offset":0,"endian":"big"},
+    {"name":"BARO","id":"0x3EA","start":6,"length":2,"scale":0.1,"offset":0,"endian":"big"},
+
+    {"name":"GEAR","id":"0x3EB","start":0,"length":1,"scale":1,"offset":0,"endian":"big"},
+    {"name":"FUELCUT","id":"0x3EB","start":1,"length":1,"scale":1,"offset":0,"endian":"big"},
+    {"name":"IGNCUT","id":"0x3EB","start":2,"length":1,"scale":1,"offset":0,"endian":"big"},
+    {"name":"INJPW","id":"0x3EB","start":3,"length":2,"scale":0.001,"offset":0,"endian":"big"},
+    {"name":"FAULTS","id":"0x3EB","start":5,"length":1,"scale":1,"offset":0,"endian":"big"},
+    {"name":"KNOCK","id":"0x3EB","start":6,"length":2,"scale":1,"offset":0,"endian":"big"}
+
+  ]
+}
