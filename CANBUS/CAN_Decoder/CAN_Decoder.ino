@@ -7,7 +7,11 @@
    Haltech
    MaxxECU
    EMU Black
+<<<<<<< HEAD:CANBUS/CAN_Decoder/CAN_Decoder.ino
    Motorsport Electronics ME1
+=======
+   Link G4X
+>>>>>>> dd73009de3b55a95ba959ba612af1ef0cd4ddc13:CANBUS/CAN_Decoder.ino
 
    Output: Speeduino OCH protocol
 */
@@ -101,6 +105,35 @@ const CANSignal emuProtocol[] PROGMEM = {
 {0x602,3,1,1,0,true,"OIL_TEMP"},
 {0x602,4,1,0.0625,0,true,"OIL_PRESSURE"},
 {0x604,2,2,0.027,0,true,"BATTERY_VOLTAGE"}
+
+};
+
+const CANSignal linkG4XProtocol[] PROGMEM = {
+
+{0x3E8,0,2,1,0,false,"RPM"},
+{0x3E8,2,2,1,-100,false,"MAP"},
+{0x3E8,4,1,1,-50,false,"COOLANT_TEMP"},
+{0x3E8,5,1,1,-50,false,"IAT"},
+{0x3E8,6,1,0.1,0,false,"BATTERY_VOLTAGE"},
+{0x3E8,7,1,1,-50,false,"OIL_TEMP"},
+
+{0x3E9,0,2,0.1,0,false,"TPS"},
+{0x3E9,2,2,0.1,-100,false,"IGNITION_ANGLE"},
+{0x3E9,4,1,1,0,false,"VEHICLE_SPEED"},
+{0x3E9,5,1,0.1,0,false,"OIL_PRESSURE"},
+{0x3E9,6,1,0.1,0,false,"FUEL_PRESSURE"},
+{0x3E9,7,1,1,-50,false,"ECU_TEMP"},
+
+{0x3EA,0,2,0.001,0,false,"LAMBDA1"},
+{0x3EA,2,2,0.001,0,false,"LAMBDA2"},
+{0x3EA,6,2,0.1,0,false,"BARO"},
+
+{0x3EB,0,1,1,0,false,"GEAR"},
+{0x3EB,1,1,1,0,false,"FUELCUT"},
+{0x3EB,2,1,1,0,false,"IGNCUT"},
+{0x3EB,3,2,0.001,0,false,"INJPW"},
+{0x3EB,5,1,1,0,false,"FAULTS"},
+{0x3EB,6,2,1,0,false,"KNOCK"}
 
 };
 
@@ -260,12 +293,17 @@ void selectProtocol(uint8_t p){
       signalCount=sizeof(emuProtocol)/sizeof(CANSignal);
       //Serial.println("Protocol: EMU Black");
       break;
-
-    case 3:
-      protocol=me1Protocol;
-      signalCount=sizeof(me1Protocol)/sizeof(CANSignal);
-      //Serial.println("Protocol: ME1");
+    
+     case 3:
+      protocol=linkG4XProtocol;
+      signalCount=sizeof(linkG4XProtocol)/sizeof(CANSignal);
+      //Serial.println("Protocol: Link G4X");
       break;
+    
+      case 4:
+        protocol=me1Protocol;
+        signalCount=sizeof(me1Protocol)/sizeof(CANSignal);
+        //Serial.println("Protocol: ME1");
   }
 
   buildLookup();
@@ -282,6 +320,8 @@ void autoDetectProtocol(){
   bool seen520=false;
   bool seen600=false;
   bool seen300=false;
+  bool seen3E8=false;
+
 
   Serial.println("Detecting ECU...");
 
@@ -296,6 +336,7 @@ void autoDetectProtocol(){
       if(rxId==0x360) seen360=true;
       if(rxId==0x520) seen520=true;
       if(rxId==0x600) seen600=true;
+      if(rxId==0x3E8) seen3E8=true;
     }
   }
 
@@ -303,7 +344,8 @@ void autoDetectProtocol(){
   if(seen360) selectProtocol(0);
   else if(seen520) selectProtocol(1);
   else if(seen600) selectProtocol(2);
-  else if(seen300) selectProtocol(3);
+  else if(seen3E8) selectProtocol(3);
+  else if(seen300) selectProtocol(4);
   else{
     Serial.println("Unknown ECU → Haltech");
     selectProtocol(0);
