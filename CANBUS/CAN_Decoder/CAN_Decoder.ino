@@ -7,6 +7,7 @@
    Haltech
    MaxxECU
    EMU Black
+   Motorsport Electronics ME1
 
    Output: Speeduino OCH protocol
 */
@@ -102,6 +103,38 @@ const CANSignal emuProtocol[] PROGMEM = {
 {0x604,2,2,0.027,0,true,"BATTERY_VOLTAGE"}
 
 };
+
+/* ============================
+   MOTORSPORT ELECTRONICS ME1
+============================ */
+
+const CANSignal me1Protocol[] PROGMEM = {
+
+{0x300,0,2,1,0,true,"RPM"},
+{0x300,2,2,0.1,0,true,"TPS"},
+{0x300,4,2,0.01,0,true,"MAP"},
+{0x300,6,2,0.1,0,true,"IAT"},
+
+{0x304,4,2,0.1,0,true,"COOLANT_TEMP"},
+{0x304,0,2,0.1,0,true,"OIL_TEMP"},
+{0x304,2,2,0.1,0,true,"OIL_PRESSURE"},
+{0x304,6,2,0.1,0,true,"BATTERY_VOLTAGE"},
+
+{0x305,3,2,0.008,0,true,"VEHICLE_SPEED"},
+
+{0x306,3,1,5,0,true,"FUEL_PRESSURE"},
+
+{0x302,0,2,0.1,0,true,"IGNITION_ANGLE"},
+{0x302,2,2,0.1,0,true,"DWELL"},
+{0x302,6,2,0.1,0,true,"INJPW"},
+
+{0x307,0,2,0.1,0,true,"EGT1"},
+{0x307,2,2,0.1,0,true,"EGT2"},
+
+{0x305,0,1,1,0,true,"GEAR"}
+
+};
+
 
 /* ============================
    ACTIVE PROTOCOL
@@ -227,6 +260,12 @@ void selectProtocol(uint8_t p){
       signalCount=sizeof(emuProtocol)/sizeof(CANSignal);
       //Serial.println("Protocol: EMU Black");
       break;
+
+    case 3:
+      protocol=me1Protocol;
+      signalCount=sizeof(me1Protocol)/sizeof(CANSignal);
+      //Serial.println("Protocol: ME1");
+      break;
   }
 
   buildLookup();
@@ -242,8 +281,9 @@ void autoDetectProtocol(){
   bool seen360=false;
   bool seen520=false;
   bool seen600=false;
+  bool seen300=false;
 
-  //Serial.println("Detecting ECU...");
+  Serial.println("Detecting ECU...");
 
   uint32_t start=millis();
 
@@ -252,18 +292,20 @@ void autoDetectProtocol(){
     if(CAN_MSGAVAIL==CAN.checkReceive()){
 
       CAN.readMsgBuf(&rxId,&len,rxBuf);
-
+      if(rxId==0x300) seen300=true;
       if(rxId==0x360) seen360=true;
       if(rxId==0x520) seen520=true;
       if(rxId==0x600) seen600=true;
     }
   }
 
+
   if(seen360) selectProtocol(0);
   else if(seen520) selectProtocol(1);
   else if(seen600) selectProtocol(2);
+  else if(seen300) selectProtocol(3);
   else{
-    //Serial.println("Unknown ECU → Haltech");
+    Serial.println("Unknown ECU → Haltech");
     selectProtocol(0);
   }
 }
@@ -363,7 +405,7 @@ void setup(){
 
   Serial.begin(BAUD_RATE);
 
-  if(CAN.begin(MCP_ANY,CAN_1000KBPS,MCP_8MHZ)!=CAN_OK){
+  if(CAN.begin(MCP_ANY,CAN_500KBPS,MCP_8MHZ)!=CAN_OK){
     //Serial.println("CAN FAIL");
     while(1);
   }

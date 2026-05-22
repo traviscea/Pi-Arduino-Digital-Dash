@@ -1,0 +1,51 @@
+{
+  "protocol":"MOTORSPORT_ELECTRONICS_ME1",
+  "signals":[
+
+    {"name":"RPM","id":"0x300","start":0,"length":2,"scale":1,"offset":0,"endian":"little"},
+    {"name":"TPS","id":"0x300","start":2,"length":2,"scale":0.1,"offset":0,"endian":"little"},
+    {"name":"MAP","id":"0x300","start":4,"length":2,"scale":0.01,"offset":0,"endian":"little"},
+    {"name":"IAT","id":"0x300","start":6,"length":2,"scale":0.1,"offset":0,"endian":"little"},
+
+    {"name":"AFR1","id":"0x301","start":2,"length":1,"scale":0.05,"offset":7.5,"endian":"little"},
+    {"name":"AFR2","id":"0x301","start":3,"length":1,"scale":0.05,"offset":7.5,"endian":"little"},
+    {"name":"LAMTRIM","id":"0x301","start":4,"length":2,"scale":0.01,"offset":0,"endian":"little"},
+    {"name":"AFRTARGET","id":"0x301","start":6,"length":1,"scale":0.05,"offset":7.5,"endian":"little"},
+    {"name":"ETHANOL","id":"0x301","start":7,"length":1,"scale":0.5,"offset":0,"endian":"little"},
+
+    {"name":"IGNANG","id":"0x302","start":0,"length":2,"scale":0.1,"offset":0,"endian":"little"},
+    {"name":"DWELL","id":"0x302","start":2,"length":2,"scale":0.1,"offset":0,"endian":"little"},
+    {"name":"INJANG","id":"0x302","start":4,"length":2,"scale":0.1,"offset":0,"endian":"little"},
+    {"name":"INJPW","id":"0x302","start":6,"length":2,"scale":0.1,"offset":0,"endian":"little"},
+
+    {"name":"OILT","id":"0x304","start":0,"length":2,"scale":0.1,"offset":0,"endian":"little"},
+    {"name":"OILP","id":"0x304","start":2,"length":2,"scale":0.1,"offset":0,"endian":"little"},
+    {"name":"CLT","id":"0x304","start":4,"length":2,"scale":0.1,"offset":0,"endian":"little"},
+    {"name":"BATT","id":"0x304","start":6,"length":2,"scale":0.1,"offset":0,"endian":"little"},
+
+    {"name":"PRI_INJ_DUTY","id":"0x303","start":0,"length":1,"scale":0.5,"offset":0,"endian":"little"},
+    {"name":"SEC_INJ_DUTY","id":"0x303","start":1,"length":1,"scale":0.5,"offset":0,"endian":"little"},
+    {"name":"SEC_INJ_ANGLE","id":"0x303","start":2,"length":2,"scale":0.1,"offset":0,"endian":"little"},
+    {"name":"SEC_INJPW","id":"0x303","start":4,"length":2,"scale":0.1,"offset":0,"endian":"little"},
+    {"name":"BOOST_DUTY","id":"0x303","start":6,"length":1,"scale":0.5,"offset":0,"endian":"little"},
+
+    {"name":"GEAR","id":"0x305","start":0,"length":1,"scale":1,"offset":0,"endian":"little"},
+    {"name":"MAP_TARGET","id":"0x305","start":1,"length":2,"scale":0.01,"offset":0,"endian":"little"},
+    {"name":"VSPD","id":"0x305","start":3,"length":2,"scale":0.008,"offset":0,"endian":"little"},
+    {"name":"EPS_MASK","id":"0x305","start":5,"length":2,"scale":1,"offset":0,"endian":"little"},
+
+    {"name":"KNOCK_PEAK","id":"0x306","start":0,"length":2,"scale":1,"offset":0,"endian":"little"},
+    {"name":"KNOCK_IGN_MOD","id":"0x306","start":2,"length":1,"scale":0.1,"offset":0,"endian":"little"},
+    {"name":"FUELP","id":"0x306","start":3,"length":1,"scale":5,"offset":0,"endian":"little"},
+    {"name":"FUELT","id":"0x306","start":4,"length":1,"scale":1,"offset":0,"endian":"little"},
+    {"name":"KNOCK_COUNT","id":"0x306","start":5,"length":2,"scale":1,"offset":0,"endian":"little"},
+
+    {"name":"EGT1","id":"0x307","start":0,"length":2,"scale":0.1,"offset":0,"endian":"little"},
+    {"name":"EGT2","id":"0x307","start":2,"length":2,"scale":0.1,"offset":0,"endian":"little"},
+    {"name":"GPT1","id":"0x307","start":4,"length":2,"scale":1,"offset":0,"endian":"little"},
+    {"name":"GPT2","id":"0x307","start":6,"length":2,"scale":1,"offset":0,"endian":"little"},
+
+    {"name":"VSPD2","id":"0x340","start":0,"length":2,"scale":0.008,"offset":0,"endian":"little"}
+
+  ]
+}
